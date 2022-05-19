@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity, View } from 'react-native'
 import { Feather } from '@expo/vector-icons';
-import { Container, Header, RainImage, Player, TitlePage } from './styles'
+import { Container, Header, RainImage, Content, TitlePage } from './styles'
 
 import simpleRain from '../../assets/simple-rain.png'
 import Clock from '../../components/Clock';
+import Player from '../../components/Player';
 
 export default function RainTypes() {
   const { goBack } = useNavigation()
@@ -32,10 +33,11 @@ export default function RainTypes() {
         </View>
         <Feather name="arrow-left" size={24} color="transparent" />
       </Header>
-      <Player>
+      <Content>
         <TitlePage>Simple Rain</TitlePage>
         <Clock />
-      </Player>
+        <Player />
+      </Content>
     </Container>
   )
 }

@@ -16,7 +16,7 @@ export const Header = styled.View`
   justify-content: space-between;
 `
 
-export const Player = styled.View`
+export const Content = styled.View`
   flex: 0.4;
   width: 100%;
   flex-direction: column;
