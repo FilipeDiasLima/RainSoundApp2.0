@@ -10,10 +10,14 @@ import Player from '../../components/Player';
 export default function RainTypes() {
   const { goBack } = useNavigation()
 
+  const freeMemory = () => {
+    goBack()
+  }
+
   return (
     <Container>
       <Header>
-        <TouchableOpacity onPress={() => goBack()}>
+        <TouchableOpacity onPress={freeMemory}>
           <Feather name="arrow-left" size={30} color="white" style={{ marginTop: 20 }} />
         </TouchableOpacity>
         <View style={{
