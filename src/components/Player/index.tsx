@@ -81,6 +81,15 @@ const Player = ({ trigger }: PlayerProps) => {
   };
 
   useEffect(() => {
+    Audio.setAudioModeAsync({
+      // playsInSilentModeIOS: true,
+      // allowsRecordingIOS: false,
+      staysActiveInBackground: true,
+      // interruptionModeIOS: 1,
+      // shouldDuckAndroid: true,
+      // interruptionModeAndroid: 1,
+      // playThroughEarpieceAndroid: true,
+    });
     LoadAudio();
   }, [])
 
