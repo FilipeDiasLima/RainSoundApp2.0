@@ -1,4 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+
 import { TouchableOpacity, View } from 'react-native'
 import { Feather } from '@expo/vector-icons';
 import { Container, Header, RainImage, Content, TitlePage } from './styles'
@@ -8,16 +9,12 @@ import Clock from '../../components/Clock';
 import Player from '../../components/Player';
 
 export default function RainTypes() {
-  const { goBack } = useNavigation()
-
-  const freeMemory = () => {
-    goBack()
-  }
+  const [trigger, setTrigger] = useState(false);
 
   return (
     <Container>
       <Header>
-        <TouchableOpacity onPress={freeMemory}>
+        <TouchableOpacity onPress={() => setTrigger(!trigger)}>
           <Feather name="arrow-left" size={30} color="white" style={{ marginTop: 20 }} />
         </TouchableOpacity>
         <View style={{
@@ -40,7 +37,7 @@ export default function RainTypes() {
       <Content>
         <TitlePage>Simple Rain</TitlePage>
         <Clock />
-        <Player />
+        <Player trigger={trigger} />
       </Content>
     </Container>
   )

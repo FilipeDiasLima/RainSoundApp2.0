@@ -2,16 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { AudioButton, Container, PlayButton, SettingButton } from './styles'
 import { Audio } from 'expo-av';
+import { useNavigation } from '@react-navigation/native';
+interface PlayerProps {
+  trigger?: boolean
+}
 
 const SampleTrack = require('../../assets/pow.mp3')
 
-export default function Player() {
+const Player = ({ trigger }: PlayerProps) => {
   const [isPlay, setIsPlay] = useState(false)
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const sound = useRef(new Audio.Sound());
+  const { goBack } = useNavigation()
 
-  async function PlayAudio() {
+  let sound = useRef<Audio.Sound>(new Audio.Sound());
+
+  async function playAudio() {
     try {
       const result = await sound.current.getStatusAsync();
       if (result.isLoaded) {
@@ -22,13 +28,25 @@ export default function Player() {
     } catch (error) { }
   }
 
-  const PauseAudio = async () => {
+  const pauseAudio = async () => {
     try {
       const result = await sound.current.getStatusAsync();
       if (result.isLoaded) {
         if (result.isPlaying === true) {
           sound.current.pauseAsync();
         }
+      }
+    } catch (error) { }
+  };
+
+  const stopAudio = async () => {
+    try {
+      const result = await sound.current.getStatusAsync();
+      if (result.isLoaded) {
+        if (result.isPlaying === true) {
+          sound.current.stopAsync();
+        }
+        goBack()
       }
     } catch (error) { }
   };
@@ -50,7 +68,7 @@ export default function Player() {
           setLoading(false);
           setLoaded(true);
         }
-        PlayAudio()
+        playAudio()
         setIsPlay(!isPlay)
         sound.current.setIsLoopingAsync(true)
       } catch (error) {
@@ -68,11 +86,15 @@ export default function Player() {
 
   useEffect(() => {
     if (!isPlay) {
-      PauseAudio()
+      pauseAudio()
     } else {
-      PlayAudio()
+      playAudio()
     }
   }, [isPlay])
+
+  useEffect(() => {
+    stopAudio()
+  }, [trigger])
 
   return (
     <Container>
@@ -104,3 +126,5 @@ export default function Player() {
     </Container>
   )
 }
+
+export default Player
