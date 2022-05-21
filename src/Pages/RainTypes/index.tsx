@@ -1,20 +1,29 @@
-import { useState } from 'react';
-
+import { useContext, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native'
 import { Feather } from '@expo/vector-icons';
 import { Container, Header, RainImage, Content, TitlePage } from './styles'
+import Constants from 'expo-constants';
+import { useNavigation } from '@react-navigation/native'
 
 import simpleRain from '../../assets/simple-rain.png'
 import Clock from '../../components/Clock';
 import Player from '../../components/Player';
 
+import { PlayerContext } from '../../context/PlayerContext';
+
 export default function RainTypes() {
-  const [trigger, setTrigger] = useState(false);
+  const { toggleTrigger } = useContext(PlayerContext)
+  const { goBack } = useNavigation()
+
+  const closeAudio = () => {
+    goBack()
+    toggleTrigger()
+  }
 
   return (
-    <Container>
+    <Container style={{ paddingTop: Constants.statusBarHeight + 20 }}>
       <Header>
-        <TouchableOpacity onPress={() => setTrigger(!trigger)}>
+        <TouchableOpacity onPress={closeAudio}>
           <Feather name="arrow-left" size={30} color="white" style={{ marginTop: 20 }} />
         </TouchableOpacity>
         <View style={{
@@ -37,7 +46,7 @@ export default function RainTypes() {
       <Content>
         <TitlePage>Simple Rain</TitlePage>
         <Clock />
-        <Player trigger={trigger} />
+        <Player />
       </Content>
     </Container>
   )

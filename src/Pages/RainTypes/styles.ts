@@ -10,14 +10,13 @@ export const Container = styled.View`
 `
 
 export const Header = styled.View`
-  flex: 0.5;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
 `
 
 export const Content = styled.View`
-  flex: 0.4;
+  flex: 1;
   width: 100%;
   flex-direction: column;
   align-items: center;
