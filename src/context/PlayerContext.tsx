@@ -6,6 +6,7 @@ interface PlayerContextData {
   loaded: boolean
   loading: boolean
   volume: number
+  rain: boolean
   thunder: boolean
   wind: boolean
   playAudio: () => void
@@ -15,6 +16,7 @@ interface PlayerContextData {
   toggleTrigger: () => void
   toggleThunder: () => void
   toggleWind: () => void
+  toggleRain: () => void
 }
 
 interface PlayerProviderProps {
@@ -23,6 +25,7 @@ interface PlayerProviderProps {
 
 const RainTrack = require('../assets/chuva.mp3')
 const ThunderTrack = require('../assets/trovao1.mp3')
+const WindTrack = require('../assets/mixkit-scary-graveyard-wind-1157.mp3')
 
 export const PlayerContext = createContext({} as PlayerContextData)
 
@@ -31,12 +34,14 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
   const [loaded, setLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [volume, setVolume] = useState(0.0)
-  const [trigger, setTrigger] = useState(false);
+  const [trigger, setTrigger] = useState(false)
+  const [rain, setRain] = useState(false)
   const [thunder, setThunder] = useState(false)
   const [wind, setWind] = useState(false)
 
   let sound = useRef<Audio.Sound>(new Audio.Sound())
   let thunderSound = useRef<Audio.Sound>(new Audio.Sound())
+  let windSound = useRef<Audio.Sound>(new Audio.Sound())
 
   async function playAudio() {
     try {
@@ -60,12 +65,45 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
     } catch (error) { }
   }
 
+  async function playWindAudio() {
+    try {
+      const result = await windSound.current.getStatusAsync()
+      if (result.isLoaded) {
+        if (result.isPlaying === false) {
+          windSound.current.playAsync()
+        }
+      }
+    } catch (error) { }
+  }
+
   const pauseAudio = async () => {
     try {
       const result = await sound.current.getStatusAsync()
       if (result.isLoaded) {
         if (result.isPlaying === true) {
           sound.current.pauseAsync()
+        }
+      }
+    } catch (error) { }
+  }
+
+  const pauseThunderAudio = async () => {
+    try {
+      const result = await thunderSound.current.getStatusAsync()
+      if (result.isLoaded) {
+        if (result.isPlaying === true) {
+          thunderSound.current.pauseAsync()
+        }
+      }
+    } catch (error) { }
+  }
+
+  const pauseWindAudio = async () => {
+    try {
+      const result = await windSound.current.getStatusAsync()
+      if (result.isLoaded) {
+        if (result.isPlaying === true) {
+          windSound.current.pauseAsync()
         }
       }
     } catch (error) { }
@@ -86,11 +124,22 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
   const stopThunderAudio = async () => {
     try {
       const result = await thunderSound.current.getStatusAsync()
-      console.log('')
       if (result.isLoaded) {
         if (result.isPlaying === true) {
           thunderSound.current.stopAsync()
           thunderSound.current.unloadAsync()
+        }
+      }
+    } catch (error) { }
+  }
+
+  const stopWindAudio = async () => {
+    try {
+      const result = await windSound.current.getStatusAsync()
+      if (result.isLoaded) {
+        if (result.isPlaying === true) {
+          windSound.current.stopAsync()
+          windSound.current.unloadAsync()
         }
       }
     } catch (error) { }
@@ -128,22 +177,42 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
   const LoadThunderAudio = async () => {
     setLoading(true)
     const checkLoading = await thunderSound.current.getStatusAsync()
-    console.log(checkLoading)
     if (checkLoading.isLoaded === false) {
-      console.log(checkLoading.isLoaded)
       try {
         const result = await thunderSound.current.loadAsync(ThunderTrack, {}, true)
         if (result.isLoaded === false) {
-          console.log('LOADED FALSE')
           setLoading(false)
           console.log('Error in Loading Audio')
         } else {
-          console.log('LOADED TRUE')
           setLoading(false)
           setLoaded(true)
         }
         playThunderAudio()
         thunderSound.current.setIsLoopingAsync(true)
+      } catch (error) {
+        console.log(error)
+        setLoading(false)
+      }
+    } else {
+      setLoading(false)
+    }
+  }
+
+  const LoadWindAudio = async () => {
+    setLoading(true)
+    const checkLoading = await windSound.current.getStatusAsync()
+    if (checkLoading.isLoaded === false) {
+      try {
+        const result = await windSound.current.loadAsync(WindTrack, {}, true)
+        if (result.isLoaded === false) {
+          setLoading(false)
+          console.log('Error in Loading Audio')
+        } else {
+          setLoading(false)
+          setLoaded(true)
+        }
+        playWindAudio()
+        windSound.current.setIsLoopingAsync(true)
       } catch (error) {
         console.log(error)
         setLoading(false)
@@ -167,6 +236,10 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
     setTrigger(!trigger)
   }
 
+  const toggleRain = () => {
+    setRain(!rain)
+  }
+
   const toggleThunder = () => {
     setThunder(!thunder)
   }
@@ -179,25 +252,43 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
     Audio.setAudioModeAsync({
       staysActiveInBackground: true
     })
+    setRain(true)
     LoadAudio()
   }, [])
 
   useEffect(() => {
+    if (rain) {
+      LoadAudio()
+    } else {
+      stopAudio()
+    }
+  }, [rain])
+
+  useEffect(() => {
     if (thunder) {
-      console.log('LOAD THUNDER')
       LoadThunderAudio()
     } else {
-      console.log('STOP THUNDER')
       stopThunderAudio()
     }
-    console.log(thunder)
   }, [thunder])
+
+  useEffect(() => {
+    if (wind) {
+      LoadWindAudio()
+    } else {
+      stopWindAudio()
+    }
+  }, [wind])
 
   useEffect(() => {
     if (!isPlay) {
       pauseAudio()
+      pauseThunderAudio()
+      pauseWindAudio()
     } else {
       playAudio()
+      playThunderAudio()
+      playWindAudio()
     }
   }, [isPlay])
 
@@ -213,6 +304,7 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         loaded,
         loading,
         volume,
+        rain,
         thunder,
         wind,
         pauseAudio,
@@ -220,6 +312,7 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         toggleSound,
         toggleVolume,
         toggleTrigger,
+        toggleRain,
         toggleThunder,
         toggleWind
       }}

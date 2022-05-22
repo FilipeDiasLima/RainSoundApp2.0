@@ -10,7 +10,7 @@ import { PlayerContext } from '../../context/PlayerContext'
 const RainSettings = () => {
   const { goBack } = useNavigation()
 
-  const { toggleThunder, toggleWind, wind, thunder } = useContext(PlayerContext)
+  const { toggleThunder, toggleWind, toggleRain, wind, thunder, rain } = useContext(PlayerContext)
 
   return (
     <Container style={{ paddingTop: Constants.statusBarHeight + 20 }}>
@@ -23,6 +23,18 @@ const RainSettings = () => {
       </Header>
       <Content>
         <Options>
+          <Option>
+            <OptionName>Rain</OptionName>
+            <SwitchButton
+              trackColor={{ false: "#dbdbdb", true: "#AEC3D2" }}
+              thumbColor={rain ? "#313841" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleRain}
+              value={rain}
+            />
+          </Option>
+          <Divisor />
+
           <Option>
             <OptionName>Wind</OptionName>
             <SwitchButton
