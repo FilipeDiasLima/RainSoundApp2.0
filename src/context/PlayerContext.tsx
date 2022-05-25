@@ -26,12 +26,9 @@ interface PlayerProviderProps {
 
 const RainTrack = require('../assets/rain/chuva.mp3')
 
-const ThunderTrack = require('../assets/thunder/trovao1.mp3')
-const ThunderTrack2 = require('../assets/thunder/trovao2.mp3')
-const ThunderTrack3 = require('../assets/thunder/trovao3.mp3')
+const ThunderTrack = require('../assets/thunder/trovao.mp3')
 
-const WindTrack = require('../assets/wind/wind1.mp3')
-const WindTrack2 = require('../assets/wind/wind2.mp3')
+const WindTrack = require('../assets/wind/wind.mp3')
 
 export const PlayerContext = createContext({} as PlayerContextData)
 
@@ -163,16 +160,13 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         const result = await sound.current.loadAsync(RainTrack, {}, true)
         if (result.isLoaded === false) {
           setLoading(false)
-          console.log('Error in Loading Audio')
         } else {
           setLoading(false)
           setLoaded(true)
         }
         playAudio()
-        setIsPlay(!isPlay)
         sound.current.setIsLoopingAsync(true)
       } catch (error) {
-        console.log(error)
         setLoading(false)
       }
     } else {
@@ -185,32 +179,16 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
     const checkLoading = await thunderSound.current.getStatusAsync()
     if (checkLoading.isLoaded === false) {
       try {
-        let result
-        const thunderNumber = randomNumber(1, 4)
-        switch (thunderNumber) {
-          case 1:
-            result = await thunderSound.current.loadAsync(ThunderTrack, {}, true)
-            break;
-          case 2:
-            result = await thunderSound.current.loadAsync(ThunderTrack2, {}, true)
-            break;
-          case 3:
-            result = await thunderSound.current.loadAsync(ThunderTrack3, {}, true)
-            break;
-          default:
-            break;
-        }
+        const result = await thunderSound.current.loadAsync(ThunderTrack, {}, true)
         if (result?.isLoaded === false) {
           setLoading(false)
-          console.log('Error in Loading Audio')
         } else {
           setLoading(false)
           setLoaded(true)
         }
         playThunderAudio()
-        thunderSound.current.setIsLoopingAsync(false)
+        thunderSound.current.setIsLoopingAsync(true)
       } catch (error) {
-        console.log(error)
         setLoading(false)
       }
     } else {
@@ -226,7 +204,6 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         const result = await windSound.current.loadAsync(WindTrack, {}, true)
         if (result.isLoaded === false) {
           setLoading(false)
-          console.log('Error in Loading Audio')
         } else {
           setLoading(false)
           setLoaded(true)
@@ -234,7 +211,6 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
         playWindAudio()
         windSound.current.setIsLoopingAsync(true)
       } catch (error) {
-        console.log(error)
         setLoading(false)
       }
     } else {
@@ -273,6 +249,7 @@ export const PlayerProvider = ({ children }: PlayerProviderProps) => {
       staysActiveInBackground: true
     })
     setRain(true)
+    setIsPlay(true)
     LoadAudio()
   }, [])
 
