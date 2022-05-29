@@ -6,15 +6,29 @@ export const Container = styled.View`
   justify-content: center;
   align-items: center;
   background-color: #313841;
-  padding: 5% 8%;
+  padding: 5% 8% 0 8%;
+`
+
+export const Header = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 `
 
 export const Content = styled.View`
-  flex: 0.8;
+  flex: 1;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 10% 0;
+  padding: 20% 0;
+`
+
+export const Footer = styled.View`
+  width: 100%;
+  align-items: center;
+  align-self: center;
+  align-content: center;
 `
 
 export const TitlePage = styled.Text`

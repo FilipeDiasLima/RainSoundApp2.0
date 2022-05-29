@@ -2,15 +2,20 @@ import { TouchableOpacity, View } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import Constants from 'expo-constants'
+import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob'
 
-import { Container, Header, Content, TitlePage, Options, Option, OptionName, SwitchButton, Divisor } from './styles'
-import { useContext } from 'react'
+import { Container, Header, Content, TitlePage, Options, Option, OptionName, SwitchButton, Divisor, Footer } from './styles'
+import { useContext, useEffect } from 'react'
 import { PlayerContext } from '../../context/PlayerContext'
 
 const RainSettings = () => {
   const { goBack } = useNavigation()
 
   const { toggleThunder, toggleWind, toggleRain, wind, thunder, rain } = useContext(PlayerContext)
+
+  useEffect(() => {
+    setTestDeviceIDAsync('EMULATOR')
+  }, [])
 
   return (
     <Container style={{ paddingTop: Constants.statusBarHeight + 20 }}>
@@ -60,6 +65,14 @@ const RainSettings = () => {
           </Option>
         </Options>
       </Content>
+      <Footer>
+        <AdMobBanner
+          bannerSize='smartBannerPortrait'
+          adUnitID='ca-app-pub-4792845809342776/1318701317'
+          servePersonalizedAds
+          onDidFailToReceiveAdWithError={e => console.log(e)}
+        />
+      </Footer>
     </Container>
   )
 }

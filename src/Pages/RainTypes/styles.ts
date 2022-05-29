@@ -34,3 +34,10 @@ export const TitlePage = styled.Text`
   color: #FFF;
   font-size: 30px;
 `
+
+export const Footer = styled.View`
+  width: 100%;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+`

@@ -16,10 +16,18 @@ export const Header = styled.View`
 `
 
 export const Content = styled.View`
-  justify-content: center;
+  flex: 1;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   padding-top: 20%;
+`
+
+export const Footer = styled.View`
+  width: 100%;
+  align-items: center;
+  align-self: center;
+  align-content: center;
 `
 
 export const TitlePage = styled.Text`
